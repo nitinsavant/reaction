@@ -35,7 +35,12 @@ class BoardContainer extends React.Component {
     let newIndex;
 
     if (sibling) {
-      newIndex = +sibling.dataset.index - 1;
+      const siblingIndex = +sibling.dataset.index;
+      if (siblingIndex > oldIndex) {
+        newIndex = siblingIndex - 1;
+      } else {
+        newIndex = siblingIndex;
+      }
     } else {
       newIndex = lists.length - 1;
     }
