@@ -10,6 +10,7 @@ class Api::CardsController < ApplicationController
 
   def create
     @card = Card.new(card_params)
+    List.find(params['card']['list_id'])
 
     if @card.save
       render :create, status: :created
@@ -18,6 +19,9 @@ class Api::CardsController < ApplicationController
       render 'api/shared/error', status: :unprocessable_entity
     end
 
+    rescue ActiveRecord::RecordNotFound
+      @error = "Could not find list with id of #{params['card']['list_id']}"
+      render 'api/shared/error', status: 404
     rescue ActionController::ParameterMissing
       @error = "Invalid card data provided"
       render 'api/shared/error', status: :unprocessable_entity
@@ -32,7 +36,7 @@ class Api::CardsController < ApplicationController
       @error = @card.errors.full_messages.join(', ')
       render 'api/shared/error', status: :unprocessable_entity
     end
-    
+
     rescue ActiveRecord::RecordNotFound
       @error = "Could not find card with id of #{params[:id]}"
       render 'api/shared/error', status: 404
@@ -45,6 +49,6 @@ class Api::CardsController < ApplicationController
   private
 
   def card_params
-    params.require(:card).permit(:list_id, :title, :position)
+    params.require(:card).permit(:list_id, :title, :position, :description, :archived, :due_date, :completed, :labels)
   end
 end
