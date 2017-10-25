@@ -40,12 +40,22 @@ const List = (props) => {
             {cardComponents}
           </div>
 
-          <div className="add-dropdown add-bottom">
-              <div className="card"><div className="card-info"></div><textarea name="add-card"></textarea><div className="members"></div></div>
-              <a className="button">Add</a><i className="x-icon icon"></i>
+          <div className={`add-dropdown add-bottom${props.active ? ' active-card' : ''}`}>
+              <div className="card">
+                <div className="card-info"></div>
+                <textarea onChange={props.onCardChange} name="add-card" value={props.cardTitle}></textarea>
+                <div className="members"></div>
+              </div>
+              <a onClick={props.onAddCard} className="button">Add</a>
+              <i onClick={props.onCloseForm} className="x-icon icon"></i>
               <div className="add-options"><span>...</span></div>
           </div>
-          <div className="add-card-toggle" data-position="bottom">Add a card...</div>
+          <div
+            onClick={props.onOpenForm}
+            className="add-card-toggle"
+            data-position="bottom"
+          >
+          Add a card...</div>
         </div>
     </div>
 

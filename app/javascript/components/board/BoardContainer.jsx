@@ -14,6 +14,10 @@ class BoardContainer extends React.Component {
     store: PropTypes.object.isRequired
   };
 
+  state = {
+    activeList: null
+  };
+
   componentDidMount() {
     const store = this.context.store;
     this.unsubscribe = store.subscribe(() => this.forceUpdate());
@@ -74,6 +78,14 @@ class BoardContainer extends React.Component {
     }
   }
 
+  handleOpenForm = (listId) => {
+    this.setState({ activeList: listId });
+  }
+
+  handleCloseForm = (listId) => {
+    this.setState({ activeList: null });
+  }
+
   render() {
     return (
       <Board
@@ -81,6 +93,9 @@ class BoardContainer extends React.Component {
         title={this.currentBoardTitle()}
         id={+this.props.match.params.id}
         newPosition={this.lastPosition()+100}
+        activeList={this.state.activeList}
+        onOpenForm={this.handleOpenForm}
+        onCloseForm={this.handleCloseForm}
       />
     )
   }

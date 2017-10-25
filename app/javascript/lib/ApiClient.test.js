@@ -283,4 +283,167 @@ describe("ApiClient", () => {
       });
     });
   });
+
+  describe("getCard", () => {
+    const card = {
+      id: 1,
+      title: "My Card",
+      comments: [],
+    };
+
+    describe("successful request", () => {
+      it("calls the callback with the card", async () => {
+        const cb = jest.fn();
+
+        mock.onGet(routes.CARD_SHOW_URL + '1').reply(200, card);
+        client.getCard('1', cb);
+
+        await flushPromises();
+
+        expect(cb).toHaveBeenCalledWith(card);
+      });
+    });
+
+    describe("failed request", () => {
+      const originalError = global.console.error;
+      const errorText = "You don't have access to that";
+
+      beforeEach(() => {
+        global.console.error = jest.fn();
+        mock.onGet(routes.CARD_SHOW_URL + '1').reply(401, { error: errorText });
+      });
+
+      afterEach(() => {
+        global.console.error = originalError;
+      });
+
+      it("logs the error", async () => {
+        client.getCard('1', (card) => {});
+
+        await flushPromises();
+
+        expect(global.console.error).toHaveBeenCalledWith(`HTTP Error: ${errorText}`);
+      });
+
+      it("doesn't call the callback", async () => {
+        const cb = jest.fn();
+        client.getCard('1', cb);
+
+        await flushPromises();
+
+        expect(cb).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe("UpdateCard", () => {
+    describe("successful request", () => {
+      const newCard = {
+        id: 1,
+        list_id: 1,
+        title: "my card",
+        position: 1.0
+      };
+
+      it("calls the callback with the new card", async () => {
+        const cb = jest.fn();
+
+        mock.onPatch(routes.UPDATE_CARD_URL + '1').reply(200, newCard);
+        client.updateCard(newCard, cb);
+
+        await flushPromises();
+
+        expect(cb).toHaveBeenCalledWith(newCard);
+      });
+    });
+
+    describe("failed 404 request", () => {
+      const newCard = {
+        id: 1,
+        list_id: 1,
+        title: "my card",
+        position: 1.0
+      };
+      const originalError = global.console.error;
+      const errorText = "This card could not be found";
+
+      beforeEach(() => {
+        global.console.error = jest.fn();
+        mock.onPatch(routes.UPDATE_CARD_URL + '99').reply(404, { error: errorText });
+      });
+
+      afterEach(() => {
+        global.console.error = originalError;
+      });
+
+      // it("logs the error", async () => {
+      //   client.updateCard(newCard);
+      //
+      //   await flushPromises();
+      //
+      //   expect(global.console.error).toHaveBeenCalledWith(`Error: ${errorText}`);
+      // });
+
+      it("doesn't call the callback", async () => {
+        const cb = jest.fn();
+
+        client.updateCard(newCard, cb);
+
+        await flushPromises();
+
+        expect(cb).not.toHaveBeenCalled();
+      });
+    })
+  });
+
+  describe("createCard", () => {
+    describe("successful request", () => {
+      const newCard = {
+        title: "My new card"
+      };
+
+      it("calls the callback with the new card", async () => {
+        const cb = jest.fn();
+
+        mock.onPost(routes.CREATE_CARD_URL).reply(201, { ...newCard, id: 37 });
+        client.createCard(newCard, cb);
+
+        await flushPromises();
+
+        expect(cb).toHaveBeenCalledWith({ ...newCard, id: 37 })
+      });
+    });
+
+    describe("failed request", () => {
+      const originalError = global.console.error;
+      const errorText = "That is not a valid record";
+
+      beforeEach(() => {
+        global.console.error = jest.fn();
+        mock.onPost(routes.CREATE_CARD_URL).reply(422, { error: errorText });
+      });
+
+      afterEach(() => {
+        global.console.error = originalError;
+      });
+
+      it("logs the error", async () => {
+        client.createCard({});
+
+        await flushPromises();
+
+        expect(global.console.error).toHaveBeenCalledWith(`HTTP Error: ${errorText}`);
+      });
+
+      it("doesn't call the callback", async () => {
+        const cb = jest.fn();
+
+        client.createCard({}, cb);
+
+        await flushPromises();
+
+        expect(cb).not.toHaveBeenCalled();
+      });
+    });
+  });
 });
