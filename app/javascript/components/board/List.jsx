@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import CardTile from './CardTile';
+import CreateCardContainer from './CreateCardContainer';
 
 import * as actions from '../../actions/BoardActions';
 
@@ -45,7 +46,13 @@ const List = (props) => {
               <a className="button">Add</a><i className="x-icon icon"></i>
               <div className="add-options"><span>...</span></div>
           </div>
-          <div className="add-card-toggle" data-position="bottom">Add a card...</div>
+          <CreateCardContainer
+            id={props.id}
+            cards={props.cards}
+            showAddCardForm={props.showAddCardForm}
+            openAddCardForm={props.openAddCardForm}
+            closeAddCardForm={props.closeAddCardForm}
+          />
         </div>
     </div>
 

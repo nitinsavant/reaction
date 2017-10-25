@@ -12,7 +12,7 @@ class ListContainer extends React.Component {
 
   state = {
     title: this.props.list.title,
-    editing: false
+    editing: false,
   };
 
   allTheseCards = () => {
@@ -42,9 +42,15 @@ class ListContainer extends React.Component {
     this.setState({ title: e.target.value });
   };
 
+  showAddCardForm = () => {
+    return this.props.addFormOpenListId === this.props.list.id;
+  }
+
   render() {
+    const isAddCardFormOpen = this.showAddCardForm() ? 'add-dropdown-active' : '';
+
     return (
-      <div className="list-wrapper" data-index={this.props.idx}>
+      <div className={`list-wrapper ${isAddCardFormOpen}`} data-index={this.props.idx}>
         <List
           cards={this.allTheseCards()}
           title={this.state.title}
@@ -53,6 +59,9 @@ class ListContainer extends React.Component {
           onClick={this.handleClick}
           onBlur={this.handleBlur}
           onChange={this.handleChange}
+          showAddCardForm={this.showAddCardForm}
+          openAddCardForm={this.props.openAddCardForm}
+          closeAddCardForm={this.props.closeAddCardForm}
         />
       </div>
     )

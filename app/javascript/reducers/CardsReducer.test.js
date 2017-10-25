@@ -48,4 +48,17 @@ describe("CardsReducer", () => {
       ).toEqual(3);
     });
   });
+
+  describe("CREATE_CARD_SUCCESS", () => {
+    it("returns card", () => {
+      expect(
+        reducer([], {
+          type: types.CREATE_CARD_SUCCESS,
+          card: { id: 1,
+                   title: "My card",
+          }
+        })
+      ).toEqual([{id: 1, title: "My card"}]);
+    });
+  });
 });

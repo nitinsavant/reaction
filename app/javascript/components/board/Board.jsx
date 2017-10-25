@@ -8,7 +8,15 @@ import * as actions from '../../actions/BoardActions';
 
 const Board = (props) => {
   const lists = props.lists.map((list, idx) =>
-    <ListContainer idx={idx} list={list} key={list.id} />
+    <ListContainer
+      idx={idx}
+      list={list}
+      key={list.id}
+      showAddCardForm={props.showAddCardForm}
+      openAddCardForm={props.openAddCardForm}
+      closeAddCardForm={props.closeAddCardForm}
+      addFormOpenListId={props.addFormOpenListId}
+    />
   );
 
   return (

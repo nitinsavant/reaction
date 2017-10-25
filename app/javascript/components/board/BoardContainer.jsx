@@ -10,6 +10,10 @@ import PositionCalculator from '../../lib/PositionCalculator';
 import Dragula from 'react-dragula';
 
 class BoardContainer extends React.Component {
+  state = {
+    addFormOpenListId: null,
+  }
+
   static contextTypes = {
     store: PropTypes.object.isRequired
   };
@@ -74,6 +78,14 @@ class BoardContainer extends React.Component {
     }
   }
 
+  handleOpenAddCardForm = (list_id) => {
+    this.setState({ addFormOpenListId: list_id });
+  }
+
+  handleCloseAddCardForm = () => {
+    this.setState({ addFormOpenListId: null });
+  }
+
   render() {
     return (
       <Board
@@ -81,6 +93,9 @@ class BoardContainer extends React.Component {
         title={this.currentBoardTitle()}
         id={+this.props.match.params.id}
         newPosition={this.lastPosition()+100}
+        addFormOpenListId={this.state.addFormOpenListId}
+        openAddCardForm={this.handleOpenAddCardForm}
+        closeAddCardForm={this.handleCloseAddCardForm}
       />
     )
   }
