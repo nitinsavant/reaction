@@ -1,12 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import Board from './Board';
-
 import * as actions from '../../actions/BoardActions';
 import * as listActions from '../../actions/ListActions';
 import PositionCalculator from '../../lib/PositionCalculator';
-
 import Dragula from 'react-dragula';
 
 class BoardContainer extends React.Component {
@@ -23,10 +20,10 @@ class BoardContainer extends React.Component {
     this.unsubscribe = store.subscribe(() => this.forceUpdate());
     store.dispatch(actions.fetchBoard(this.props.match.params.id));
 
-    Dragula([document.querySelector('#existing-lists')], {
-      direction: 'horizontal',
-      revertOnSpill: true
-    }).on('drop', this.updateListPosition);
+    // Dragula([document.querySelector('#existing-lists')], {
+    //   direction: 'horizontal',
+    //   revertOnSpill: true
+    // }).on('drop', this.updateListPosition);
   }
 
   componentWillUnmount() {

@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import List from './List';
-
 import * as actions from '../../actions/ListActions';
+import Dragula from 'react-dragula';
 
 class ListContainer extends React.Component {
   static contextTypes = {
@@ -14,6 +13,14 @@ class ListContainer extends React.Component {
     title: this.props.list.title,
     editing: false,
   };
+
+  componentDidMount() {
+    Dragula({
+      isContainer: function(el) {
+        return el.id === 'cards.container';
+      },
+    });
+  }
 
   allTheseCards = () => {
     const store = this.context.store;
