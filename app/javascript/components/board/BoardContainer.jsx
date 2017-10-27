@@ -21,13 +21,13 @@ class BoardContainer extends React.Component {
     this.unsubscribe = store.subscribe(() => this.forceUpdate());
     store.dispatch(actions.fetchBoard(this.props.match.params.id));
 
-    // this.listDrake = dragula([document.querySelector('#existing-lists')], {
-    //   direction: 'horizontal',
-    //   revertOnSpill: true,
-    //   invalid: function(el) {
-    //     return el.classList.contains('card');
-    //   }
-    // }).on('drop', this.updateListPosition);
+    this.listDrake = dragula([document.querySelector('#existing-lists')], {
+      direction: 'horizontal',
+      revertOnSpill: true,
+      invalid: function(el) {
+        return el.classList.contains('card');
+      }
+    }).on('drop', this.updateListPosition);
 
     this.cardDrake = dragula({
       isContainer: function(el) {
@@ -46,37 +46,36 @@ class BoardContainer extends React.Component {
     const targetList = target.dataset.id;
     const targetListId = parseInt(targetList.replace(/[^0-9\.]/g, ''), 10);
 
-    const cards = this.allLists().filter(list => list.id === targetListId)[0].cards;
+    const cards = this.allCards().filter(card => card.list_id === targetListId).sort((a, b) => a.position - b.position);
 
-    let oldCardIndex;
+    let oldIndex;
     let siblingIndex;
-    let newCardIndex;
+    let newIndex;
     let newCardPosition;
 
     if (sourceList === targetList) {
-      oldCardIndex = +el.dataset.index;
+      oldIndex = +el.dataset.index;
 
       if (sibling) {
         siblingIndex = +sibling.dataset.index;
-        if (siblingIndex > oldCardIndex) {
-          newCardIndex = siblingIndex - 1;
+        if (siblingIndex > oldIndex) {
+          newIndex = siblingIndex - 1;
         } else {
-          newCardIndex = siblingIndex;
+          newIndex = siblingIndex;
         }
       } else {
-        newCardIndex = cards.length - 1;
+        newIndex = cards.length - 1;
       }
-      newCardPosition = calculatePosition(cards, newCardIndex, oldCardIndex);
+      newCardPosition = calculatePosition(cards, newIndex, oldIndex);
     } else {
-      debugger;
       if (sibling) {
         siblingIndex = +sibling.dataset.index;
-        newCardIndex = siblingIndex + 1;
+        newIndex = siblingIndex;
       } else {
-        newCardIndex = cards.length;
+        newIndex = cards.length;
       }
 
-      newCardPosition = calculatePosition(cards, newCardIndex);
+      newCardPosition = calculatePosition(cards, newIndex);
     }
 
     this.cardDrake.cancel(true);
@@ -114,6 +113,11 @@ class BoardContainer extends React.Component {
     const store = this.context.store;
     return store.getState().lists;
   }
+
+  allCards = () => {
+    const store = this.context.store;
+    return store.getState().cards;
+  };
 
   currentBoardTitle = () => {
     const store = this.context.store;

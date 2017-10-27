@@ -4,7 +4,7 @@ const TopNav = () => (
   <nav>
       <ul>
         <li className="boards trello-icon icon">
-          <span>Boards</span>
+          <a href='/'><span>Boards</span></a>
         </li>
         <li className="search-container">
           <div className="search search-icon icon"></div>
@@ -20,8 +20,8 @@ const TopNav = () => (
       <h1>Trello</h1>
       <ul className="user-info">
         <li className="create-icon icon"></li>
-        <li className="split-button-1">VR</li>
-        <li className="split-button-2">Victor Reyes</li>
+        <li className="split-button-1">NS</li>
+        <li className="split-button-2">Nitin Savant</li>
         <li className="info-icon icon"></li>
         <li className="notifications-icon icon"></li>
       </ul>

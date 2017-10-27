@@ -1,7 +1,7 @@
 export default function PositionCalculator(items, targetIndex, originalIndex) {
   const itemsClone = items.slice();
   const isOnly = itemsClone.length === 0;
-  const isFirst = targetIndex <= 0;
+  const isFirst = targetIndex === 0;
 
   itemsClone.sort((a, b) => a.position - b.position);
 
@@ -14,7 +14,7 @@ export default function PositionCalculator(items, targetIndex, originalIndex) {
   } else if (isFirst) {
     return itemsClone[0].position / 2;
   } else if (isLast) {
-    return itemsClone[itemsClone.length - 1].position + 65535;
+    return itemsClone[itemsClone.length - 1].position + 65536;
   } else {
     let itemBefore, itemAfter;
 
