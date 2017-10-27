@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import * as CardActions from '../../actions/CardActions';
-import PositionCalculator from '../../lib/PositionCalculator';
+import calculatePosition from '../../lib/PositionCalculator';
 
 import CreateCardForm from './CreateCardForm';
 
@@ -29,7 +29,7 @@ class CreateCardContainer extends React.Component {
     const newCard = {
       title: this.state.title,
       list_id: this.props.id,
-      position: PositionCalculator(this.props.cards, this.props.cards.length),
+      position: calculatePosition(this.props.cards, this.props.cards.length),
     };
 
     this.context.store.dispatch(

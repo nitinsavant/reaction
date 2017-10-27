@@ -20,7 +20,8 @@ const CreateCardForm = props => {
         className="add-card-toggle"
         data-position="bottom"
         onClick={props.openAddCardForm}
-        >Add a card...</div>
+        >Add a card...
+      </div>
     </div>
   );
 }

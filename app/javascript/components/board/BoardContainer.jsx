@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import Board from './Board';
 import * as actions from '../../actions/BoardActions';
 import * as listActions from '../../actions/ListActions';
-import PositionCalculator from '../../lib/PositionCalculator';
-import Dragula from 'react-dragula';
+import * as CardActions from '../../actions/CardActions';
+import calculatePosition from '../../lib/PositionCalculator';
+import dragula from 'react-dragula';
 
 class BoardContainer extends React.Component {
   state = {
@@ -20,14 +21,70 @@ class BoardContainer extends React.Component {
     this.unsubscribe = store.subscribe(() => this.forceUpdate());
     store.dispatch(actions.fetchBoard(this.props.match.params.id));
 
-    // Dragula([document.querySelector('#existing-lists')], {
+    // this.listDrake = dragula([document.querySelector('#existing-lists')], {
     //   direction: 'horizontal',
-    //   revertOnSpill: true
+    //   revertOnSpill: true,
+    //   invalid: function(el) {
+    //     return el.classList.contains('card');
+    //   }
     // }).on('drop', this.updateListPosition);
+
+    this.cardDrake = dragula({
+      isContainer: function(el) {
+        return el.id === 'cards-container';
+      },
+    }).on('drop', this.updateCardPosition);
   }
 
   componentWillUnmount() {
     this.unsubscribe();
+    this.cardDrake.destroy();
+  }
+
+  updateCardPosition = (el, target, source, sibling) => {
+    const sourceList = source.dataset.id;
+    const targetList = target.dataset.id;
+    const targetListId = parseInt(targetList.replace(/[^0-9\.]/g, ''), 10);
+
+    const cards = this.allLists().filter(list => list.id === targetListId)[0].cards;
+
+    let oldCardIndex;
+    let siblingIndex;
+    let newCardIndex;
+    let newCardPosition;
+
+    if (sourceList === targetList) {
+      oldCardIndex = +el.dataset.index;
+
+      if (sibling) {
+        siblingIndex = +sibling.dataset.index;
+        if (siblingIndex > oldCardIndex) {
+          newCardIndex = siblingIndex - 1;
+        } else {
+          newCardIndex = siblingIndex;
+        }
+      } else {
+        newCardIndex = cards.length - 1;
+      }
+      newCardPosition = calculatePosition(cards, newCardIndex, oldCardIndex);
+    } else {
+      debugger;
+      if (sibling) {
+        siblingIndex = +sibling.dataset.index;
+        newCardIndex = siblingIndex + 1;
+      } else {
+        newCardIndex = cards.length;
+      }
+
+      newCardPosition = calculatePosition(cards, newCardIndex);
+    }
+
+    this.cardDrake.cancel(true);
+
+    const cardId = +el.dataset.cardId;
+    this.context.store.dispatch(
+      CardActions.updateCard({ position: newCardPosition, id: cardId, list_id: targetListId })
+    );
   }
 
   updateListPosition = (el, target, source, sibling) => {
@@ -46,7 +103,7 @@ class BoardContainer extends React.Component {
       newIndex = lists.length - 1;
     }
 
-    const newPosition = PositionCalculator(lists, newIndex, oldIndex);
+    const newPosition = calculatePosition(lists, newIndex, oldIndex);
     const listId = +lists[oldIndex].id;
     this.context.store.dispatch(
       listActions.updateList({ position: newPosition, id: listId })

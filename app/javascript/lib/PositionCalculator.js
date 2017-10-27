@@ -14,7 +14,7 @@ export default function PositionCalculator(items, targetIndex, originalIndex) {
   } else if (isFirst) {
     return itemsClone[0].position / 2;
   } else if (isLast) {
-    return itemsClone[itemsClone.length - 1].position + 65536;
+    return itemsClone[itemsClone.length - 1].position + 65535;
   } else {
     let itemBefore, itemAfter;
 

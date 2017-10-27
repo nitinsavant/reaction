@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import List from './List';
-import * as actions from '../../actions/ListActions';
+import * as ListActions from '../../actions/ListActions';
+import * as CardActions from '../../actions/CardActions';
 import Dragula from 'react-dragula';
+import PositionCalculator from '../../lib/PositionCalculator'
 
 class ListContainer extends React.Component {
   static contextTypes = {
@@ -14,18 +16,10 @@ class ListContainer extends React.Component {
     editing: false,
   };
 
-  componentDidMount() {
-    Dragula({
-      isContainer: function(el) {
-        return el.id === 'cards.container';
-      },
-    });
-  }
-
   allTheseCards = () => {
     const store = this.context.store;
     const cards = store.getState().cards;
-    return cards.filter(card => card.list_id === this.props.list.id);
+    return cards.filter(card => card.list_id === this.props.list.id).sort((a, b) => a.position - b.position);
   };
 
   handleClick = () => {
@@ -39,7 +33,7 @@ class ListContainer extends React.Component {
     };
 
     this.context.store.dispatch(
-      actions.updateList(editedList, () => {
+      ListActions.updateList(editedList, () => {
         this.setState({ editing: false });
       })
     );

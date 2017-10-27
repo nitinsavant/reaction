@@ -23,7 +23,7 @@ const CardTile = (props) => {
   }
 
   return (
-    <a data-card-id={props.card.id} href={`/cards/${props.card.id}`}>
+    <a data-card-id={props.card.id} data-index={props.idx} href={`/cards/${props.card.id}`}>
       <div className="card-background">
           <div className="card "><i className="edit-toggle edit-icon sm-icon"></i>
               <div className="card-info">

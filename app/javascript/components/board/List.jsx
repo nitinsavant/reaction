@@ -7,7 +7,7 @@ import CreateCardContainer from './CreateCardContainer';
 import * as actions from '../../actions/BoardActions';
 
 const List = (props) => {
-  const cardComponents = props.cards.map(card => <CardTile card={card} key={card.id} />);
+  const cardComponents = props.cards.map((card, idx) => <CardTile card={card} key={card.id} idx={idx}/>);
   const renderTitle = () => {
     if (props.editing) {
       return (
