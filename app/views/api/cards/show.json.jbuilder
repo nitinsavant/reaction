@@ -10,5 +10,5 @@ json.updated_at @card.updated_at
 json.due_date @card.due_date
 json.completed @card.completed
 json.board_id @card.list.board_id
-json.comments @cards.comments
+json.comments @card.comments
 json.actions []

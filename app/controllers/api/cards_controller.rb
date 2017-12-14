@@ -46,14 +46,4 @@ class Api::CardsController < ApplicationController
   def card_params
     params.require(:card).permit(:id, :title, :position, :list_id)
   end
-
-  # def list_exists?
-  #   begin
-  #
-  #   rescue
-  #     return false
-  #   end
-  #
-  #   true
-  # end
 end

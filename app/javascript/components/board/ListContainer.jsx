@@ -1,5 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import PositionCalculator from '../../lib/PositionCalculator';
+
+import Dragula from 'react-dragula';
 
 import List from './List';
 
@@ -14,13 +17,14 @@ class ListContainer extends React.Component {
   state = {
     title: this.props.list.title,
     editing: false,
-    cardTitle: ''
+    newCardTitle: ''
   };
 
   allTheseCards = () => {
     const store = this.context.store;
     const cards = store.getState().cards;
-    return cards.filter(card => card.list_id === this.props.list.id);
+    return cards.filter(card => card.list_id === this.props.list.id)
+                .sort((a, b) => a.position - b.position);
   };
 
   handleClick = () => {
@@ -45,7 +49,7 @@ class ListContainer extends React.Component {
   };
 
   handleCardChange = (e) => {
-    this.setState({ cardTitle: e.target.value });
+    this.setState({ newCardTitle: e.target.value });
   }
 
   handleOpenForm = () => {
@@ -53,14 +57,17 @@ class ListContainer extends React.Component {
   }
 
   handleAddCard = () => {
+    const cards = this.allTheseCards();
+
     const newCard = {
-      title: this.state.cardTitle,
-      position: Math.floor(Math.random() * 20),
+      title: this.state.newCardTitle,
+      position: PositionCalculator(cards, cards.length),
       list_id: this.props.list.id
     }
 
     this.context.store.dispatch(
       cardActions.createCard(newCard, () => {
+        this.setState({ newCardTitle: '' });
         this.props.onCloseForm();
       })
     );
@@ -87,7 +94,7 @@ class ListContainer extends React.Component {
           onOpenForm={this.handleOpenForm}
           onCloseForm={this.props.onCloseForm}
           onAddCard={this.handleAddCard}
-          cardTitle={this.state.cardTitle}
+          newCardTitle={this.state.newCardTitle}
           onCardChange={this.handleCardChange}
         />
       </div>

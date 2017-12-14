@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   root to: 'home#index'
   get '/boards/:id', to: 'home#index', as: :board
+  get '/cards/:id', to: 'home#index', as: :card
 
   namespace :api do
     resources :boards, only: [:index, :create, :show]

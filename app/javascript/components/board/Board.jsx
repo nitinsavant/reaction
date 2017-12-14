@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import ListContainer from './ListContainer';
 import CreateListTileContainer from './CreateListTileContainer';
 
-import * as actions from '../../actions/BoardActions';
-
 const Board = (props) => {
   const lists = props.lists.map((list, idx) =>
     <ListContainer
